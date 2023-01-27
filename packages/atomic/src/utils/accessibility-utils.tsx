@@ -2,7 +2,7 @@
 import {AnyBindings} from '../components/common/interface/bindings';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
-import {defer} from './utils';
+import {defer, getParent} from './utils';
 
 export const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
 
@@ -173,4 +173,22 @@ export function getFirstFocusableDescendant(
   element: Element
 ): HTMLElement | null {
   return getFocusableDescendants(element).next().value ?? null;
+}
+
+export function getNextFocusableSibling(element: Element): HTMLElement | null {
+  const siblings = getParent(element)?.children;
+  if (!siblings) {
+    return null;
+  }
+  let index = 0;
+  while (siblings?.item(index) !== element && index < siblings.length) {
+    index = index + 1;
+  }
+  index = index + 1;
+  let item = siblings.item(index);
+  while (item && !isFocusable(item)) {
+    index = index + 1;
+    item = siblings.item(index);
+  }
+  return siblings.item(index) as HTMLElement;
 }

@@ -1,5 +1,8 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
+import {
+  getFirstFocusableDescendant,
+  getNextFocusableSibling,
+} from '../../utils/accessibility-utils';
 import {
   isAncestorOf,
   defer,
@@ -25,11 +28,14 @@ export class AtomicFocusTrap {
    * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
    */
   @Prop({mutable: true}) container?: HTMLElement;
-
   /**
    * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
    */
   @Prop() shouldHideSelf = true;
+  /**
+   * The scope of the elements to be hidden by the focus trap.
+   */
+  @Prop() scope: HTMLElement = document.body;
 
   private readonly hiddenElements: Element[] = [];
 
@@ -65,7 +71,7 @@ export class AtomicFocusTrap {
       }
       this.hide(sibling);
     });
-    if (parent !== document.body) {
+    if (parent !== this.scope) {
       this.hideSiblingsRecursively(parent);
     }
   }
@@ -115,6 +121,7 @@ export class AtomicFocusTrap {
     if (!e.target || !this.active) {
       return;
     }
+    console.log(e.target);
 
     const focusedElement = getFocusedElement();
 
@@ -122,7 +129,12 @@ export class AtomicFocusTrap {
       return;
     }
 
-    getFirstFocusableDescendant(this.host)?.focus();
+    if (this.scope === document.body) {
+      getFirstFocusableDescendant(this.host)?.focus();
+    } else {
+      const nextSibling = getNextFocusableSibling(this.scope);
+      nextSibling?.focus();
+    }
   }
 
   connectedCallback() {

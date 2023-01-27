@@ -136,6 +136,14 @@ export class AtomicInsightRefineModal
     );
   }
 
+  private getInsightInterfaceElement() {
+    const elem = document.querySelector('atomic-insight-interface');
+    if (elem) {
+      return elem;
+    }
+    return;
+  }
+
   public render() {
     return (
       <Host>
@@ -157,7 +165,7 @@ export class AtomicInsightRefineModal
           querySummaryState={this.querySummaryState}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
-          noFocusTrap
+          scope={this.getInsightInterfaceElement()}
         >
           {this.renderBody()}
         </RefineModalCommon>

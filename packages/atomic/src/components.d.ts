@@ -253,6 +253,10 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         /**
+          * The scope of the elements to be hidden by the focus trap.
+         */
+        "scope": HTMLElement;
+        /**
           * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
         "shouldHideSelf": boolean;
@@ -742,7 +746,7 @@ export namespace Components {
         "container"?: HTMLElement;
         "fullscreen": boolean;
         "isOpen": boolean;
-        "noFocusTrap": boolean;
+        "scope": HTMLElement;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {
@@ -2884,6 +2888,10 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         /**
+          * The scope of the elements to be hidden by the focus trap.
+         */
+        "scope"?: HTMLElement;
+        /**
           * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
         "shouldHideSelf"?: boolean;
@@ -3350,8 +3358,8 @@ declare namespace LocalJSX {
         "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
-        "noFocusTrap"?: boolean;
         "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
+        "scope"?: HTMLElement;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {

@@ -53,7 +53,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   @Prop({mutable: true}) container?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
   @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
-  @Prop({reflect: true}) noFocusTrap = false;
+  @Prop() scope: HTMLElement = document.body;
 
   @Event() animationEnded!: EventEmitter<never>;
 
@@ -77,7 +77,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
-      !this.noFocusTrap && (this.focusTrap!.active = true);
+      this.focusTrap!.active = true;
     } else {
       document.body.classList.remove(modalOpenedClass);
       if (isIOS()) {
@@ -86,7 +86,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
         return;
       }
-      !this.noFocusTrap && (this.focusTrap!.active = false);
+      this.focusTrap!.active = false;
     }
   }
 
@@ -131,54 +131,6 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   public render() {
     this.updateBreakpoints();
 
-    const Content = () => (
-      <article
-        part="container"
-        class={`flex flex-col justify-between bg-background text-on-background ${
-          this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
-        } ${this.wasEverOpened ? '' : 'invisible'}`}
-        onAnimationEnd={() => this.animationEnded.emit()}
-        ref={(ref) => (this.animatableContainer = ref)}
-      >
-        <header part="header-wrapper" class="flex flex-col items-center">
-          <div
-            part="header"
-            class="flex justify-between text-xl w-full max-w-lg"
-            id={this.headerId}
-          >
-            <slot name="header"></slot>
-          </div>
-        </header>
-        <hr part="header-ruler" class="border-neutral"></hr>
-        <div
-          part="body-wrapper"
-          class="overflow-auto grow flex flex-col items-center w-full"
-        >
-          <div
-            part="body"
-            class="w-full max-w-lg"
-            ref={(element) =>
-              element?.addEventListener(
-                'touchmove',
-                (e) => this.isOpen && e.stopPropagation(),
-                {passive: false}
-              )
-            }
-          >
-            <slot name="body"></slot>
-          </div>
-        </div>
-        <footer
-          part="footer-wrapper"
-          class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
-        >
-          <div part="footer" class="w-full max-w-lg">
-            <slot name="footer"></slot>
-          </div>
-        </footer>
-      </article>
-    );
-
     return (
       <Host class={this.getClasses().join(' ')}>
         <div
@@ -186,20 +138,61 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
           class="fixed left-0 top-0 right-0 bottom-0 z-[9999]"
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
-          {this.noFocusTrap ? (
-            <Content />
-          ) : (
-            <atomic-focus-trap
-              role="dialog"
-              aria-modal={this.isOpen.toString()}
-              aria-labelledby={this.headerId}
-              source={this.source}
-              container={this.container ?? this.host}
-              ref={(ref) => (this.focusTrap = ref)}
+          <atomic-focus-trap
+            role="dialog"
+            aria-modal={this.isOpen.toString()}
+            aria-labelledby={this.headerId}
+            source={this.source}
+            container={this.container ?? this.host}
+            ref={(ref) => (this.focusTrap = ref)}
+            scope={this.scope}
+          >
+            <article
+              part="container"
+              class={`flex flex-col justify-between bg-background text-on-background ${
+                this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
+              } ${this.wasEverOpened ? '' : 'invisible'}`}
+              onAnimationEnd={() => this.animationEnded.emit()}
+              ref={(ref) => (this.animatableContainer = ref)}
             >
-              <Content />
-            </atomic-focus-trap>
-          )}
+              <header part="header-wrapper" class="flex flex-col items-center">
+                <div
+                  part="header"
+                  class="flex justify-between text-xl w-full max-w-lg"
+                  id={this.headerId}
+                >
+                  <slot name="header"></slot>
+                </div>
+              </header>
+              <hr part="header-ruler" class="border-neutral"></hr>
+              <div
+                part="body-wrapper"
+                class="overflow-auto grow flex flex-col items-center w-full"
+              >
+                <div
+                  part="body"
+                  class="w-full max-w-lg"
+                  ref={(element) =>
+                    element?.addEventListener(
+                      'touchmove',
+                      (e) => this.isOpen && e.stopPropagation(),
+                      {passive: false}
+                    )
+                  }
+                >
+                  <slot name="body"></slot>
+                </div>
+              </div>
+              <footer
+                part="footer-wrapper"
+                class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
+              >
+                <div part="footer" class="w-full max-w-lg">
+                  <slot name="footer"></slot>
+                </div>
+              </footer>
+            </article>
+          </atomic-focus-trap>
         </div>
       </Host>
     );

@@ -142,6 +142,14 @@ export class AtomicIPXRefineModal implements InitializableComponent {
     );
   }
 
+  private getSearchInterfaceElement() {
+    const elem = document.querySelector('atomic-insight-interface');
+    if (elem) {
+      return elem;
+    }
+    return;
+  }
+
   public render() {
     return (
       <Host>
@@ -163,6 +171,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
           querySummaryState={this.querySummaryState}
           title={this.bindings.i18n.t('filters')}
           openButton={this.openButton}
+          scope={this.getSearchInterfaceElement()}
         >
           {this.renderBody()}
         </RefineModalCommon>
