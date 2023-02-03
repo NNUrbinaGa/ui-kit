@@ -2,6 +2,20 @@
   "name": "@coveo/atomic-angular",
   "version": "2.3.19",
   "license": "Apache-2.0",
+  "typings": "dist/index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./dist/package.json"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "esm2020": "./dist/esm2020/coveo-atomic-angular.mjs",
+      "es2020": "./dist/fesm2020/coveo-atomic-angular.mjs",
+      "es2015": "./dist/fesm2015/coveo-atomic-angular.mjs",
+      "node": "./dist/fesm2015/coveo-atomic-angular.mjs",
+      "default": "./dist/fesm2020/coveo-atomic-angular.mjs"
+    }
+  },
   "peerDependencies": {
     "@angular/common": "^14.0.0",
     "@angular/core": "^14.0.0",
