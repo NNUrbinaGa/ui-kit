@@ -46,6 +46,8 @@ import {
 } from '@coveo/atomic-react';
 import type {NextPage} from 'next';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import Link from 'next/link';
 import {useMemo} from 'react';
 
 const SearchPage: NextPage = () => {
@@ -65,105 +67,131 @@ const SearchPage: NextPage = () => {
   );
 
   return (
-    <AtomicSearchInterface
-      engine={engine}
-      fieldsToInclude={[
-        'cat_platform',
-        'cat_condition',
-        'cat_categories',
-        'cat_review_count',
-        'cat_color',
-      ]}
-    >
-      <AtomicSearchLayout>
-        <AtomicLayoutSection section="search">
-          <AtomicSearchBox />
-        </AtomicLayoutSection>
-        <AtomicLayoutSection section="facets">
-          <AtomicFacetManager>
-            <AtomicFacet field="source" label="Source" />
-            <AtomicFacet field="objecttype" label="Type" />
-            <AtomicNumericFacet
-              field="cat_review_count"
-              label="Amount of reviews"
-              displayValuesAs="link"
-            >
-              <AtomicNumericRange start={0} end={150} label="Few" />
-              <AtomicNumericRange
-                start={150}
-                end={650}
-                label="A moderate amount"
-              />
-              <AtomicNumericRange start={650} end={9999999999} label="A lot" />
-            </AtomicNumericFacet>
-            <AtomicColorFacet
-              field="cat_color"
-              label="Color"
-              numberOfValues={6}
-              sortCriteria="occurrences"
-            />
-            <AtomicNumericFacet
-              field="ec_price"
-              label="Cost"
-              withInput="integer"
-            >
-              <AtomicFormatCurrency currency="USD" />
-            </AtomicNumericFacet>
-            <AtomicTimeframeFacet withDatePicker label="Listed within">
-              <AtomicTimeframe unit="hour" />
-              <AtomicTimeframe unit="day" />
-              <AtomicTimeframe unit="week" />
-              <AtomicTimeframe unit="month" />
-              <AtomicTimeframe unit="quarter" />
-              <AtomicTimeframe unit="year" />
-              <AtomicTimeframe unit="year" amount={10} period="next" />
-            </AtomicTimeframeFacet>
-            <AtomicRatingFacet
-              field="ec_rating"
-              label="Rating"
-              numberOfIntervals={5}
-            />
-            <AtomicRatingRangeFacet
-              field="ec_rating"
-              label="Rating Range"
-              numberOfIntervals={5}
-              facetId="ec_rating_range"
-            />
-          </AtomicFacetManager>
-        </AtomicLayoutSection>
-        <AtomicLayoutSection section="main">
-          <AtomicLayoutSection section="status">
-            <AtomicBreadbox />
-            <AtomicQuerySummary />
-            <AtomicRefineToggle />
-            <AtomicSortDropdown>
-              <AtomicSortExpression label="relevance" expression="relevancy" />
-              <AtomicSortExpression
-                label="Price (low to high)"
-                expression="ec_price ascending"
-              />
-              <AtomicSortExpression
-                label="Price (high to low)"
-                expression="ec_price descending"
-              />
-            </AtomicSortDropdown>
-            <AtomicDidYouMean />
+    <>
+      <Head>
+        <link
+          rel="canonical"
+          href={'https://www.coveo.com/search'}
+          key="canonical"
+        />
+      </Head>
+      <div>
+        <ul>
+          <li>
+            <Link href="/">Nav1</Link>
+          </li>
+          <li>
+            <Link href="/">Nav2</Link>
+          </li>
+        </ul>
+      </div>
+      <AtomicSearchInterface
+        engine={engine}
+        fieldsToInclude={[
+          'cat_platform',
+          'cat_condition',
+          'cat_categories',
+          'cat_review_count',
+          'cat_color',
+        ]}
+      >
+        <AtomicSearchLayout>
+          <AtomicLayoutSection section="search">
+            <AtomicSearchBox />
           </AtomicLayoutSection>
-          <AtomicLayoutSection section="results">
-            <AtomicResultList
-              display="list"
-              imageSize="large"
-              template={MyTemplate}
-            />
-            <AtomicQueryError />
-            <AtomicNoResults />
+          <AtomicLayoutSection section="facets">
+            <AtomicFacetManager>
+              <AtomicFacet field="source" label="Source" />
+              <AtomicFacet field="objecttype" label="Type" />
+              <AtomicNumericFacet
+                field="cat_review_count"
+                label="Amount of reviews"
+                displayValuesAs="link"
+              >
+                <AtomicNumericRange start={0} end={150} label="Few" />
+                <AtomicNumericRange
+                  start={150}
+                  end={650}
+                  label="A moderate amount"
+                />
+                <AtomicNumericRange
+                  start={650}
+                  end={9999999999}
+                  label="A lot"
+                />
+              </AtomicNumericFacet>
+              <AtomicColorFacet
+                field="cat_color"
+                label="Color"
+                numberOfValues={6}
+                sortCriteria="occurrences"
+              />
+              <AtomicNumericFacet
+                field="ec_price"
+                label="Cost"
+                withInput="integer"
+              >
+                <AtomicFormatCurrency currency="USD" />
+              </AtomicNumericFacet>
+              <AtomicTimeframeFacet withDatePicker label="Listed within">
+                <AtomicTimeframe unit="hour" />
+                <AtomicTimeframe unit="day" />
+                <AtomicTimeframe unit="week" />
+                <AtomicTimeframe unit="month" />
+                <AtomicTimeframe unit="quarter" />
+                <AtomicTimeframe unit="year" />
+                <AtomicTimeframe unit="year" amount={10} period="next" />
+              </AtomicTimeframeFacet>
+              <AtomicRatingFacet
+                field="ec_rating"
+                label="Rating"
+                numberOfIntervals={5}
+              />
+              <AtomicRatingRangeFacet
+                field="ec_rating"
+                label="Rating Range"
+                numberOfIntervals={5}
+                facetId="ec_rating_range"
+              />
+            </AtomicFacetManager>
           </AtomicLayoutSection>
-          <AtomicLayoutSection section="pagination">
-            <AtomicLoadMoreResults />
+          <AtomicLayoutSection section="main">
+            <AtomicLayoutSection section="status">
+              <AtomicBreadbox />
+              <AtomicQuerySummary />
+              <AtomicRefineToggle />
+              <AtomicSortDropdown>
+                <AtomicSortExpression
+                  label="relevance"
+                  expression="relevancy"
+                />
+                <AtomicSortExpression
+                  label="Price (low to high)"
+                  expression="ec_price ascending"
+                />
+                <AtomicSortExpression
+                  label="Price (high to low)"
+                  expression="ec_price descending"
+                />
+              </AtomicSortDropdown>
+              <AtomicDidYouMean />
+            </AtomicLayoutSection>
+            <AtomicLayoutSection section="results">
+              <AtomicResultList
+                display="list"
+                imageSize="large"
+                template={MyTemplate}
+              />
+              <AtomicQueryError />
+              <AtomicNoResults />
+            </AtomicLayoutSection>
+            <AtomicLayoutSection section="pagination">
+              <AtomicLoadMoreResults />
+            </AtomicLayoutSection>
           </AtomicLayoutSection>
-        </AtomicLayoutSection>
-      </AtomicSearchLayout>
-    </AtomicSearchInterface>
+        </AtomicSearchLayout>
+      </AtomicSearchInterface>
+    </>
   );
 };
 
